@@ -8,4 +8,11 @@
     <string name="nav_home">Home</string>
     <string name="nav_person">Account</string>
     <string name="nav_settings">Settings</string>
+
+
+    <string-array name="Games">
+        <item>PUBG</item>
+        <item>Free Fire</item>
+        <item>Call of Duty</item>
+    </string-array>
 </resources>

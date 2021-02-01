@@ -1,7 +1,9 @@
 package com.gamersbay.admin;
 
+import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -23,6 +25,10 @@ public class HomeFragment extends Fragment {
 
     private String mParam1;
     private String mParam2;
+
+    CardView create_match_card;
+    CardView edit_match_card;
+    CardView view_match_card;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -59,6 +65,20 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
+
+        create_match_card = view.findViewById(R.id.create_match_card);
+
+        create_match_card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(getActivity(),CreateMatches.class);
+                startActivity(intent);
+            }
+        });
+
+
+        return view;
     }
 }

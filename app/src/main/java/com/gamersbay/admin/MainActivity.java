@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         bottomNavigationView = findViewById(R.id.bottom_nav);
+        bottomNavigationView.getMenu().findItem(R.id.nav_home).setChecked(true);
         frameLayout = findViewById(R.id.main_framelayout);
         homeFragment = new HomeFragment();
         accountFragment = new AccountFragment();
