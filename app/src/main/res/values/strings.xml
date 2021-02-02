@@ -15,4 +15,17 @@
         <item>Free Fire</item>
         <item>Call of Duty</item>
     </string-array>
+
+    <string-array name="Pubg_map">
+        <item>Erangel</item>
+        <item>Miramar</item>
+        <item>Sanhok</item>
+        <item>Vikendi</item>
+    </string-array>
+
+    <string-array name="Free_Fire_maps">
+        <item>Bermuda</item>
+        <item>Purgatory</item>
+        <item>Kalahari</item>
+    </string-array>
 </resources>

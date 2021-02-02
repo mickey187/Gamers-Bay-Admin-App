@@ -29,6 +29,7 @@ import java.util.Map;
 
 public class CreateMatches extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     Spinner spinner_game_chooser;
+    Spinner spinner_game_maps_chooser;
     MaterialButton create_match_button;
     FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     String game_selected, match_name, game_map, game_type,  match_day, match_description, match_status, match_time ;
@@ -46,7 +47,14 @@ public class CreateMatches extends AppCompatActivity implements AdapterView.OnIt
     TextInputEditText max_players_input;
     TextInputEditText match_description_input;
 
+    String game_collection_chooser;
+
     private CollectionReference reference = firestore.collection("Users");
+
+    ArrayAdapter<CharSequence> adapter ;
+    ArrayAdapter<CharSequence> pubg_maps_adapter;
+    ArrayAdapter<CharSequence> free_fire_maps_adapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +63,11 @@ public class CreateMatches extends AppCompatActivity implements AdapterView.OnIt
 
 
         spinner_game_chooser = findViewById(R.id.game_chooser_spinner);
+        spinner_game_maps_chooser = findViewById(R.id.choose_map_spinner);
+
         create_match_button = findViewById(R.id.create_match_button);
         match_name_input = findViewById(R.id.textField_match_name);
-        game_map_input = findViewById(R.id.textField_game_map);
+
         game_type_input = findViewById(R.id.textField_game_type);
         match_date_input = findViewById(R.id.textField_game_date);
         match_month_input = findViewById(R.id.textField_game_month);
@@ -70,16 +80,26 @@ public class CreateMatches extends AppCompatActivity implements AdapterView.OnIt
         match_description_input = findViewById(R.id.textField_match_description);
 
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.Games, android.R.layout.simple_spinner_item);
+
+        adapter = ArrayAdapter.createFromResource(this,R.array.Games, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_game_chooser.setAdapter(adapter);
         spinner_game_chooser.setOnItemSelectedListener(this);
+
+
+
+       // pubg_maps_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+
+
+
+
 
         create_match_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 match_name = match_name_input.getText().toString();
-                game_map = game_map_input.getText().toString();
+              //  game_map = game_map_input.getText().toString();
                 game_type = game_type_input.getText().toString();
                 match_day = match_date_input.getText().toString()+"/"+ match_month_input.getText().toString()+"/"+match_year_input.getText().toString();
                match_time = match_time_input.getText().toString();
@@ -101,7 +121,7 @@ public class CreateMatches extends AppCompatActivity implements AdapterView.OnIt
                 match_details.put("match_status",match_status);
                 match_details.put("match_description",match_description);
 
-                firestore.collection("pubg_matches").document(match_name).set(match_details).addOnSuccessListener(new OnSuccessListener<Void>() {
+                firestore.collection(game_collection_chooser).document(match_name).set(match_details).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
                         sendNewMatchAddedNotification(match_name);
@@ -124,6 +144,25 @@ public class CreateMatches extends AppCompatActivity implements AdapterView.OnIt
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
          game_selected = parent.getItemAtPosition(position).toString();
+
+         if (game_selected.equals("PUBG")){
+             pubg_maps_adapter = ArrayAdapter.createFromResource(this,R.array.Pubg_map,android.R.layout.simple_spinner_item );
+             pubg_maps_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+             spinner_game_maps_chooser.setAdapter(pubg_maps_adapter);
+            game_map = spinner_game_maps_chooser.getSelectedItem().toString();
+            game_collection_chooser = "pubg_matches";
+
+         } else if (game_selected.equals("Free Fire")){
+
+             free_fire_maps_adapter = ArrayAdapter.createFromResource(this,R.array.Free_Fire_maps,android.R.layout.simple_spinner_item );
+             free_fire_maps_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+             spinner_game_maps_chooser.setAdapter(free_fire_maps_adapter);
+             game_map = spinner_game_maps_chooser.getSelectedItem().toString();
+             game_collection_chooser = "free_fire_matches";
+
+         }
+
+
 
     }
 
