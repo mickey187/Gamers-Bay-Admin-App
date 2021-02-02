@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatSpinner;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -16,17 +17,21 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textview.MaterialTextView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
 public class CreateMatches extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     Spinner spinner_game_chooser;
     MaterialButton create_match_button;
-    FirebaseFirestore firestore;
-    String game_selected, match_name, game_map, game_type,  match_day, match_description,
-            match_status, match_time ;
+    FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+    String game_selected, match_name, game_map, game_type,  match_day, match_description, match_status, match_time ;
     int entry_fee,reward, max_players;
     TextInputEditText match_name_input;
     TextInputEditText game_map_input;
@@ -41,13 +46,13 @@ public class CreateMatches extends AppCompatActivity implements AdapterView.OnIt
     TextInputEditText max_players_input;
     TextInputEditText match_description_input;
 
-
-
+    private CollectionReference reference = firestore.collection("Users");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_matches);
+
 
         spinner_game_chooser = findViewById(R.id.game_chooser_spinner);
         create_match_button = findViewById(R.id.create_match_button);
@@ -64,8 +69,6 @@ public class CreateMatches extends AppCompatActivity implements AdapterView.OnIt
         max_players_input = findViewById(R.id.textField_max_players);
         match_description_input = findViewById(R.id.textField_match_description);
 
-
-        firestore = FirebaseFirestore.getInstance();
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.Games, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -101,6 +104,7 @@ public class CreateMatches extends AppCompatActivity implements AdapterView.OnIt
                 firestore.collection("pubg_matches").document(match_name).set(match_details).addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
+                        sendNewMatchAddedNotification(match_name);
                         Toast.makeText(CreateMatches.this, "Match successfully created", Toast.LENGTH_SHORT).show();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
@@ -127,7 +131,31 @@ public class CreateMatches extends AppCompatActivity implements AdapterView.OnIt
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
-
-
-
+    private void sendNewMatchAddedNotification(String match_name) {
+        reference.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                String[] list = new String[queryDocumentSnapshots.size()];
+                int count = 0;
+                for (QueryDocumentSnapshot queryDocumentSnapshot: queryDocumentSnapshots) {
+                    NotificationModel model = queryDocumentSnapshot.toObject(NotificationModel.class);
+                    list[count] = queryDocumentSnapshot.getId();
+                    count++;
+                    Log.d("TAG", "onSuccess: +"+queryDocumentSnapshot.getId());
+                    System.out.println("TAG onSuccess: +"+queryDocumentSnapshot.getId());
+                    sendNotification(queryDocumentSnapshot.getId(),match_name);
+                }
+            }
+        });
+    }
+    private void sendNotification(String s,String match_name) {
+        Map<String,Object> data = new HashMap<>();
+        data.put("title","New Game");
+        data.put("description","Brand new Game --"+ match_name+"--" );
+        data.put("notificationTimeStamp", Calendar.getInstance().getTime().toGMTString());
+        data.put("notify",false);
+        data.put("notificationId","");
+        reference =  firestore.collection("NotificationTest");
+        reference.document(s).collection("notification").add(data);
+    }
 }
