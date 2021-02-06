@@ -28,4 +28,16 @@
         <item>Purgatory</item>
         <item>Kalahari</item>
     </string-array>
+
+    <string name="pubg_txt">
+        check out who is  the top player in PUBG
+    </string>
+
+    <string name="freefire_txt">
+        check out who is  the top player in PUBG
+    </string>
+
+    <string name="codm_txt">
+        check out who is  the top player in PUBG
+    </string>
 </resources>
