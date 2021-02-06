@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
@@ -87,6 +88,7 @@ public class UserListActivity extends AppCompatActivity {
                             return;
                         }
                         sendNotification(stTitle,stMessage,id);
+                        Toast.makeText(UserListActivity.this, "Notification Sent Successfully:)", Toast.LENGTH_LONG).show();
                     }
                 });
         builder.create();
