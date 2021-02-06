@@ -1,5 +1,6 @@
 package com.gamersbay.admin;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,7 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,38 +28,29 @@ import java.util.Map;
 public class NotificationsFragment extends Fragment {
     private FirebaseFirestore firestore = FirebaseFirestore.getInstance();;
     private CollectionReference reference = firestore.collection("Users");
-    private FirebaseAuth auth;
-    private Spinner spinner;
+    private RelativeLayout singleUser;
+    private TextView groupedUser;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notifications, container, false);
-        spinner = view.findViewById(R.id.spinner);
-        sendNewMatchAddedNotification();
+        singleUser = view.findViewById(R.id.single_user_data);
+        groupedUser = view.findViewById(R.id.group_user_data);
+        singleUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getActivity(),UserListActivity.class));
+            }
+        });
+        groupedUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
         return view;
     }
 
-
-    private void sendNewMatchAddedNotification() {
-        reference.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-            @Override
-            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                String[] list = new String[queryDocumentSnapshots.size()];
-                int count = 0;
-                for (QueryDocumentSnapshot queryDocumentSnapshot: queryDocumentSnapshots) {
-                    NotificationModel model = queryDocumentSnapshot.toObject(NotificationModel.class);
-                    list[count] = queryDocumentSnapshot.getId();
-                    count++;
-                    Log.d("TAG", "onSuccess: +"+queryDocumentSnapshot.getId());
-                    System.out.println("TAG onSuccess: +"+queryDocumentSnapshot.getId());
-                    sendNotification(queryDocumentSnapshot.getId());
-                }
-                ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(getActivity(), R.layout.support_simple_spinner_dropdown_item,list);
-                arrayAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-                spinner.setAdapter(arrayAdapter);
-            }
-        });
-    }
 
     private void sendNotification(String s) {
         Map<String,Object> data = new HashMap<>();

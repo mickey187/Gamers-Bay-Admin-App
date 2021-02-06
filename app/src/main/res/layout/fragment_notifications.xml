@@ -4,9 +4,66 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_centerVertical="true"
+    android:layout_centerInParent="true"
     tools:context=".NotificationsFragment">
-    <Spinner
+
+    <LinearLayout
+        android:gravity="center"
+        android:id="@+id/single_user_id"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/spinner"/>
+        android:layout_margin="10dp"
+        android:padding="10dp"
+        >
+        <RelativeLayout
+            android:id="@+id/single_user_data"
+            android:padding="5dp"
+            android:background="#2196F3"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_margin="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="100dp">
+            <ImageView
+                android:src="@drawable/ic_baseline_person_24"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                />
+            <TextView
+                android:text="Single"
+                android:textColor="@color/white"
+                android:gravity="center"
+                android:textSize="20dp"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/white"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:padding="5dp"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="#2196F3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:src="@drawable/ic_baseline_people_24"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+            <TextView
+                android:id="@+id/group_user_data"
+                android:layout_centerHorizontal="true"
+                android:text="Group"
+                android:layout_margin="5dp"
+                android:textColor="@color/white"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/white"/>
+        </RelativeLayout>
+
+    </LinearLayout>
 </RelativeLayout>
